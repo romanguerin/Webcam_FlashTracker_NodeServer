@@ -2,14 +2,21 @@ const http = require('http');
 //const util = require('util');
 const fs = require('fs');
 
+const empty = '';
+fs.writeFile('json/myfile.json', empty, err => {
+    if (err) {
+        console.log('Error writing file', err)
+    } else {
+        console.log('Empty file')
+    }
+});
+
 http.createServer(function (req, res) {
 
     if (req.method === 'POST') {
         console.log("POST");
-        var body = '';
         req.on('data', function (data) {
-            body += data;
-            console.log("Partial body: " + body);
+            console.log("json value:" + data );
 
             //write fs
             fs.writeFile('json/myfile.json', data, err => {
@@ -20,9 +27,6 @@ http.createServer(function (req, res) {
                 }
             });
 
-        });
-        req.on('end', function () {
-            console.log("Body: " + body);
         });
         res.writeHead(200, {'Content-Type': 'text/plain','Access-Control-Allow-Origin': '*'});
         res.end('callback(\'{\"msg\": \"OK\"}\')');
